@@ -47,6 +47,7 @@ if model_name == "ElasticNet":
 if model_name == "Polynomial":
     degree = st.slider("🔧 degree", 1, 5, 2)
 
+model = None
 # 모델 생성
 if model_name == "LinearRegression":
     model = LinearRegression()
@@ -60,6 +61,34 @@ else:
     model = make_pipeline(
         PolynomialFeatures(degree=degree), StandardScaler(), LinearRegression()
     )
+if model_name == "KNN_classifier":
+    from sklearn.neighbors import KNeighborsClassifier
+
+    n_neighbors = st.slider("이웃 수 (k)", 1, 20, value=5)
+    model = KNeighborsClassifier(n_neighbors=n_neighbors)
+
+elif model_name == "KNN_regression":
+    from sklearn.neighbors import KNeighborsRegressor
+
+    n_neighbors = st.slider("이웃 수 (k)", 1, 20, value=5)
+    model = KNeighborsRegressor(n_neighbors=n_neighbors)
+
+elif model_name == "SVC":
+    from sklearn.svm import SVC
+
+    C = st.number_input("C (규제 강도)", 0.01, 100.0, value=1.0)
+    kernel = st.selectbox("커널", ["linear", "poly", "rbf", "sigmoid"])
+    gamma = st.selectbox("gamma", ["scale", "auto"])
+    model = SVC(C=C, kernel=kernel, gamma=gamma)
+
+elif model_name == "SVR":
+    from sklearn.svm import SVR
+
+    C = st.number_input("C (규제 강도)", 0.01, 100.0, value=1.0)
+    epsilon = st.number_input("epsilon (오차 허용)", 0.0, 1.0, value=0.1)
+    kernel = st.selectbox("커널", ["linear", "poly", "rbf", "sigmoid"])
+    gamma = st.selectbox("gamma", ["scale", "auto"])
+    model = SVR(C=C, epsilon=epsilon, kernel=kernel, gamma=gamma)
 
 # 학습·예측
 model.fit(X_train, y_train)
